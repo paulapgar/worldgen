@@ -1,9 +1,10 @@
-import { DefaultLoader, Engine, ExcaliburGraphicsContext, Scene, SceneActivationContext } from "excalibur";
+import { Color, DefaultLoader, Engine, ExcaliburGraphicsContext, Scene, SceneActivationContext } from "excalibur";
 import { Player } from "./player";
 
 export class MyLevel extends Scene {
     override onInitialize(engine: Engine): void {
         // Scene.onInitialize is where we recommend you perform the composition for your game
+        this.backgroundColor = Color.Black; // or any other color
         const player = new Player();
         this.add(player); // Actors need to be added to a scene to be drawn
     }

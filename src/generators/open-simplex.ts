@@ -1,9 +1,59 @@
 
-// Implemented by GLM-4.7-flash
-// OpenSimplex noise implementation for 2D terrain generation
-// This algorithm generates smooth, natural-looking terrain using gradient noise
+// OpenSimplex Noise Algorithm Explanation:
+// ==========================================
+// OpenSimplex is an improved version of Perlin noise that addresses several
+// limitations: better handling of corner cases, more consistent performance,
+// and simpler implementation. It uses simplex geometry (triangular grids) instead
+// of square grids, which reduces the number of gradient calculations needed.
+//
+// Core Concepts:
+// --------------
+// 1. SIMPLEX GEOMETRY: Uses triangular simplex cells (2D) instead of squares,
+//    reducing the number of gradient calculations from 4 to 3 per point.
+//
+// 2. SKEWING TRANSFORMS: Uses skewing (F2 and G2 constants) to transform
+//    coordinates into a skewed space where simplex cells align with axes.
+//
+// 3. CORNER CONTRIBUTIONS: Calculates contributions from 3 corners instead of
+//    4, simplifying the interpolation logic.
+//
+// 4. SMOOTH DECAY: Uses a smooth decay function (t^4) instead of fade, creating
+//    even smoother transitions between grid points.
+//
+// Algorithm Stages:
+// -----------------
+// 1. INPUT VALIDATION: Ensure heightmap is square and non-empty
+// 2. PERMUTATION TABLE INITIALIZATION: Create seed-based shuffled lookup table
+// 3. COORDINATE NORMALIZATION: Map pixel coordinates to [-1, 1] range
+// 4. FRACTAL NOISE GENERATION: Stack octaves with diminishing amplitude
+// 5. NORMALIZATION: Scale all values to [0, 1] range for consistent output
 
-// Generate heightmap using OpenSimplex noise
+/**
+ * Generates a height map using OpenSimplex noise algorithm.
+ *
+ * OpenSimplex is an improved version of Perlin noise that uses simplex geometry
+ * (triangular grids) instead of square grids, reducing gradient calculations
+ * and providing better performance and more consistent results.
+ *
+ * @param heightMap - A square 2D array representing the height map to be generated.
+ *                    The array is modified in-place.
+ * @param roughness - A value between 0 and 1 (default: 0.5) that controls terrain roughness.
+ *                    Lower values create smoother terrain; higher values create more rugged terrain.
+ * @param octaves - The number of noise octaves to stack (default: 4). Higher values add more detail.
+ * @param persistence - The amplitude decay between octaves (default: 0.5). Lower values create smoother transitions.
+ * @param lacunarity - The frequency multiplier between octaves (default: 2.0). Higher values add more detail.
+ * @param seed - A seed value for reproducible noise generation (default: random).
+ *
+ * @throws {Error} If the height map is not square or empty.
+ *
+ * @example
+ * ```typescript
+ * const heightMap: number[][] = Array(65).fill(0).map(() => Array(65).fill(0));
+ * generateHeightMapOpenSimplex(heightMap, 0.5, 6, 0.5, 2.0, 12345);
+ * // heightMap now contains generated terrain data in the range [0, 1]
+ * ```
+ */
+// ***** GLM-4.7-flash produced
 export function generateHeightMapOpenSimplex(
   heightMap: Array<Array<number>>,
   roughness: number = 0.5,
@@ -15,6 +65,7 @@ export function generateHeightMapOpenSimplex(
   // ============================================
   // STAGE 1: INPUT VALIDATION
   // ============================================
+  // Verify the heightmap is a valid square matrix for proper noise calculation
   const rows = heightMap.length;
   const cols = heightMap[0]?.length;
 
@@ -27,32 +78,46 @@ export function generateHeightMapOpenSimplex(
   }
 
   // ============================================
-  // STAGE 2: GENERATE NOISE
+  // STAGE 2: PERMUTATION TABLE INITIALIZATION
   // ============================================
-  // Initialize permutation table with seed
+  // Create a shuffled permutation table based on the seed for reproducible noise
   initPermutation(seed);
 
   const SIZE = rows;
 
-  // Generate noise for each cell
+  // ============================================
+  // STAGE 3: COORDINATE NORMALIZATION
+  // ============================================
+  // Map pixel coordinates to [-1, 1] range for consistent noise sampling
+  // This centers the noise around (0,0) and ensures uniform distribution
   for (let y = 0; y < SIZE; y++) {
     for (let x = 0; x < SIZE; x++) {
-      // Normalize coordinates to [-1, 1] range
+      // Normalize x coordinate to [-1, 1] range
       const nx = (2 * x) / (SIZE - 1) - 1;
+      // Normalize y coordinate to [-1, 1] range
       const ny = (2 * y) / (SIZE - 1) - 1;
 
-      // Generate fractal noise
+      // ============================================
+      // STAGE 4: FRACTAL NOISE GENERATION
+      // ============================================
+      // Generate multi-octave noise by stacking OpenSimplex noise at different scales
       const noise = fractalNoise(nx, ny, octaves, persistence, lacunarity);
 
-      // Scale by roughness and convert to [0, 1] range
+      // ============================================
+      // STAGE 5: VALUE SCALING
+      // ============================================
+      // Convert noise value to [0, 1] range and apply roughness factor
+      // The roughness parameter controls overall terrain variation
       heightMap[y][x] = (noise * roughness + 1) / 2;
     }
   }
 
   // ============================================
-  // STAGE 3: NORMALIZATION
+  // STAGE 6: NORMALIZATION
   // ============================================
-  // Normalize all height values to [0, 1] range
+  // Normalize all height values to [0, 1] range for consistent output
+  // This ensures the terrain values are uniformly distributed regardless
+  // of the noise generation parameters
   let min = Infinity, max = -Infinity;
   for (const row of heightMap) {
     for (const v of row) {
@@ -70,6 +135,8 @@ export function generateHeightMapOpenSimplex(
 }
 
 // Simple seeded random number generator
+// Uses Mulberry32 algorithm for fast, high-quality pseudo-random numbers
+// This ensures reproducible results when using the same seed
 class SeededRandom {
   private seed: number;
 
@@ -78,6 +145,8 @@ class SeededRandom {
   }
 
   // Pseudo-random number generator using Mulberry32 algorithm
+  // This algorithm produces high-quality pseudo-random numbers with good
+  // statistical properties and is fast to compute
   next(): number {
     let t = this.seed += 0x6D2B79F5;
     t = Math.imul(t ^ t >>> 15, t | 1);
@@ -87,6 +156,7 @@ class SeededRandom {
 }
 
 // Permutation table for gradient lookup
+// This table maps grid coordinates to gradient indices for noise generation
 let perm: Uint8Array;
 const grad3 = [
   [1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],
@@ -95,6 +165,7 @@ const grad3 = [
 ];
 
 // Initialize permutation table with seed
+// Creates a shuffled permutation table based on the seed for reproducible noise
 function initPermutation(seed: number) {
   const p = new Uint8Array(256);
   const rng = new SeededRandom(seed);
@@ -117,11 +188,18 @@ function initPermutation(seed: number) {
 }
 
 // OpenSimplex 2D noise function
+// Calculates noise value for 2D coordinates using simplex geometry
+// This is the core noise generation algorithm that creates smooth, continuous
+// random values with natural-looking patterns
 function openSimplex2D(x: number, y: number): number {
+  // Constants for simplex geometry
+  // F2: Skew factor for transforming coordinates
+  // G2: Unskew factor for transforming coordinates back
   const F2 = 0.5 * (Math.sqrt(3) - 1);
   const G2 = (3 - Math.sqrt(3)) / 6;
 
   // Skew the input space to determine which simplex cell we're in
+  // This transforms the coordinate space so that simplex cells align with axes
   const s = (x + y) * F2;
   const i = Math.floor(x + s);
   const j = Math.floor(y + s);
@@ -133,6 +211,8 @@ function openSimplex2D(x: number, y: number): number {
   const y0 = y - Y0;
 
   // Determine which simplex we're in
+  // Based on the position within the simplex cell, we identify which of the
+  // three corners will have the highest contribution to the noise value
   let i1, j1;
   if (x0 > y0) { i1 = 1; j1 = 0; }
   else { i1 = 0; j1 = 1; }
@@ -143,6 +223,7 @@ function openSimplex2D(x: number, y: number): number {
   const y2 = y0 - 1 + 2 * G2;
 
   // Calculate contribution from the three corners
+  // Get gradient indices for the three corners of the simplex cell
   const ii = i & 255;
   const jj = j & 255;
   const gi0 = perm[ii + perm[jj]] % 12;
@@ -150,9 +231,11 @@ function openSimplex2D(x: number, y: number): number {
   const gi2 = perm[ii + 1 + perm[jj + 1]] % 12;
 
   // Calculate squared distances
+  // These determine how close the point is to each corner of the simplex cell
   let n0 = 0, n1 = 0, n2 = 0;
 
   // Calculate contribution from corner 0
+  // Uses smooth decay function (t^4) for smooth transitions
   let t0 = 0.5 - x0 * x0 - y0 * y0;
   if (t0 >= 0) {
     t0 *= t0;
@@ -160,6 +243,7 @@ function openSimplex2D(x: number, y: number): number {
   }
 
   // Calculate contribution from corner 1
+  // Uses smooth decay function (t^4) for smooth transitions
   let t1 = 0.5 - x1 * x1 - y1 * y1;
   if (t1 >= 0) {
     t1 *= t1;
@@ -167,16 +251,22 @@ function openSimplex2D(x: number, y: number): number {
   }
 
   // Calculate contribution from corner 2
+  // Uses smooth decay function (t^4) for smooth transitions
   let t2 = 0.5 - x2 * x2 - y2 * y2;
   if (t2 >= 0) {
     t2 *= t2;
     n2 = t2 * t2 * (grad3[gi2][0] * x2 + grad3[gi2][1] * y2);
   }
 
+  // Combine contributions from all three corners with scaling factor
+  // The factor 70 is a constant that normalizes the output to a reasonable range
   return 70 * (n0 + n1 + n2);
 }
 
-// Fractal noise with multiple octaves
+// Fractal Brownian motion (fBm) for multi-octave noise
+// Stacks multiple octaves of noise with diminishing amplitude and increasing frequency
+// This creates detail at different scales, simulating natural phenomena like mountains,
+// valleys, and coastlines
 function fractalNoise(x: number, y: number, octaves: number, persistence: number, lacunarity: number): number {
   let total = 0;
   let frequency = 1;
@@ -184,11 +274,16 @@ function fractalNoise(x: number, y: number, octaves: number, persistence: number
   let maxValue = 0;
 
   for (let i = 0; i < octaves; i++) {
+    // Add contribution from current octave
     total += openSimplex2D(x * frequency, y * frequency) * amplitude;
+    // Track maximum amplitude for normalization
     maxValue += amplitude;
+    // Decrease amplitude for next octave (persistence)
     amplitude *= persistence;
+    // Increase frequency for next octave (lacunarity)
     frequency *= lacunarity;
   }
 
+  // Normalize by maximum amplitude
   return total / maxValue;
 }

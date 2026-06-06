@@ -1,9 +1,83 @@
 
 
+// Diamond-Square Algorithm for Height Map Generation
+// ================================================
+//
+// The Diamond-Square algorithm is a fractal noise generation technique used to create
+// natural-looking terrain height maps. It was originally developed for terrain generation
+// in video games and computer graphics.
+//
+// ## Mathematical Foundation
+//
+// The algorithm works by recursively subdividing a square grid, starting with a
+// 2^n + 1 sized grid (e.g., 33×33, 65×65, 129×129). At each level of recursion:
+//
+// 1. **Diamond Step**: For each diamond-shaped region, calculate the average of its
+//    four corner points and add a random perturbation scaled by the current roughness
+//    factor. This creates the "diamond" shapes in the fractal pattern.
+//
+// 2. **Square Step**: For each square-shaped region, calculate the average of its
+//    existing neighbors and add a random perturbation scaled by the current roughness.
+//    This fills in the gaps created by the diamond step.
+//
+// The roughness parameter controls the amplitude of the random perturbations at each
+// level. A lower roughness value creates smoother terrain with fewer details, while
+// a higher value creates more rugged, jagged terrain.
+//
+// ## Algorithm Complexity
+//
+// - Time Complexity: O(n²) where n is the grid size (2^n + 1)
+// - Space Complexity: O(1) additional space (modifies input in-place)
+// - Recursion Depth: n levels (where n = log₂(grid_size - 1))
+//
+// ## Parameters
+//
+// - `heightMap`: A square 2D array representing the height map to be generated.
+//   Must have dimensions of 2^n + 1 (e.g., 33, 65, 129, 257).
+// - `roughness`: A value between 0 and 1 (default: 0.5) that controls terrain roughness.
+//   Lower values create smoother terrain; higher values create more rugged terrain.
+//
+// ## Usage
+//
+// The function modifies the input height map in-place and normalizes all values
+// to the range [0, 1] for consistent output. The algorithm is particularly useful
+// for generating:
+//
+// - Procedural terrain for games and simulations
+// - Natural-looking landscapes with fractal detail
+// - Height maps for 3D rendering and visualization
+//
+// ## References
+//
+// - Fournier, A., Fussell, D., & Carpenter, L. (1982). "Computer rendering of fractal
+//   landscapes". Computer Graphics, 16(3), 37-50.
+// - https://en.wikipedia.org/wiki/Diamond-square_algorithm
+
+/**
+ * Generates a height map using the Diamond-Square fractal noise algorithm.
+ *
+ * This function implements the Diamond-Square algorithm, which creates natural-looking
+ * terrain by recursively subdividing a grid and adding random perturbations at each
+ * level. The algorithm produces fractal noise that can be used for terrain generation,
+ * landscape visualization, and procedural content creation.
+ *
+ * @param heightMap - A square 2D array representing the height map to be generated.
+ *                    Must have dimensions of 2^n + 1 (e.g., 33, 65, 129, 257).
+ *                    The array is modified in-place.
+ * @param roughness - A value between 0 and 1 (default: 0.5) that controls terrain roughness.
+ *                    Lower values create smoother terrain with fewer details;
+ *                    higher values create more rugged, jagged terrain.
+ *
+ * @throws {Error} If the height map is not square or if its size is not of the form 2^n + 1.
+ *
+ * @example
+ * ```typescript
+ * const heightMap: number[][] = Array(65).fill(0).map(() => Array(65).fill(0));
+ * generateHeightMapDiamondSquare(heightMap, 0.5);
+ * // heightMap now contains generated terrain data in the range [0, 1]
+ * ```
+ */
 // ***** Qwen3.6-27B produced
-// Diamond-square algorithm for height map generation
-// This algorithm generates a height map using fractal noise, creating natural-looking terrain
-// by recursively subdividing a grid and adding random perturbations at each level.
 export function generateHeightMapDiamondSquare(
   heightMap: Array<Array<number>>,
   roughness: number = 0.5
@@ -111,75 +185,3 @@ export function generateHeightMapDiamondSquare(
     }
   }
 }
-
-
-
-// Haiku
-// export function generateHeightMap(
-//   heightMap: Array<Array<number>>,
-//   roughness: number = 0.5,
-//   maxHeight: number = 100
-// ): void {
-//   const get = (x: number, y: number) => heightMap[y][x];
-//   const set = (x: number, y: number, val: number) => {
-//     heightMap[y][x] = val;
-//   };
-
-//   // Initialize corners of the 0..32 range
-//   set(0, 0, Math.random() * maxHeight);
-//   set(0, 32, Math.random() * maxHeight);
-//   set(32, 0, Math.random() * maxHeight);
-//   set(32, 32, Math.random() * maxHeight);
-
-//   let step = 32;
-//   let scale = maxHeight;
-
-//   while (step > 1) {
-//     const halfStep = Math.floor(step / 2);
-
-//     // Diamond step: fill in the midpoints of squares
-//     for (let y = 0 + halfStep; y < 32; y += step) {
-//       for (let x = 0 + halfStep; x < 32; x += step) {
-//         const avg =
-//           (get(x - halfStep, y - halfStep) +
-//             get(x + halfStep, y - halfStep) +
-//             get(x - halfStep, y + halfStep) +
-//             get(x + halfStep, y + halfStep)) /
-//           4;
-//         set(x, y, avg + (Math.random() - 0.5) * scale);
-//       }
-//     }
-
-//     // Square step: fill in points that form squares with the diamond points
-//     for (let y = 0; y < 33; y += halfStep) {
-//       for (let x = 0 + ((y + halfStep) % step); x < 33; x += step) {
-//         let sum = 0;
-//         let count = 0;
-
-//         if (x - halfStep >= 0) {
-//           sum += get(x - halfStep, y);
-//           count++;
-//         }
-//         if (x + halfStep <= 32) {
-//           sum += get(x + halfStep, y);
-//           count++;
-//         }
-//         if (y - halfStep >= 0) {
-//           sum += get(x, y - halfStep);
-//           count++;
-//         }
-//         if (y + halfStep <= 32) {
-//           sum += get(x, y + halfStep);
-//           count++;
-//         }
-
-//         if (count > 0) {
-//           set(x, y, sum / count + (Math.random() - 0.5) * scale);
-//         }
-//       }
-//     }
-
-//     step = halfStep;
-//     scale *= roughness;
-//   }
-// }

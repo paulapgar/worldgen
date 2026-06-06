@@ -28,7 +28,7 @@ const METHOD_CONFIGS: MethodConfig[] = [
     {
         name: 'diamond-square',
         ranges: {
-            roughness: { min: 0, max: 10 },
+            roughness: { min: 0, max: 5 },
             octaves: { min: 0, max: 0 },
             persistence: { min: 0, max: 0 },
             lacunarity: { min: 0, max: 0 },
@@ -101,7 +101,7 @@ export class MyLevel extends Scene {
     private lacunarityValue = document.getElementById('lacunarity-value') as HTMLSpanElement;
 
     // Current parameter values
-    private roughness: number = 5.0;
+    private roughness: number = 0;
     private octaves: number = 0;
     private persistence: number = 0;
     private lacunarity: number = 0;
@@ -373,7 +373,9 @@ export class MyLevel extends Scene {
     override onActivate(context: SceneActivationContext<unknown>): void {
         // Called when Excalibur transitions to this scene
         // Only 1 scene is active at a time
+        this.applyMethodConfig('diamond-square');
         this.refreshButtons();
+        this.refreshTilemap();
     }
 
     /**

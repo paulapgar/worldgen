@@ -120,7 +120,7 @@ export function createRainbowSpriteTilemap(): TileMap {
   let maxRow = spriteNames.length / 5; // Y rows of 5 columns
 
   const tilemap = new TileMap({
-    pos: vec(600, 165),
+    pos: vec(550, 365),
     tileWidth: 10,
     tileHeight: 10,
     rows: maxRow,

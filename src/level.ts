@@ -11,9 +11,15 @@ import { createRainbowSpriteTilemap } from "./tilemap";
  */
 export class MyLevel extends Scene {
     private currentTilemap: any = null;
-    private method: 'diamond-square' | 'open-simplex' | 'perlin' = 'perlin';
+    private method: 'diamond-square' | 'open-simplex' | 'perlin' = 'diamond-square';
     private style: 'color' | 'grayscale' = 'color';
     private seed: number = 0;
+
+    // diamond-square defaults
+    private roughness: number = 0.5;
+    private octaves: number = 0;      // Not used for diamond-square
+    private persistence: number = 0;  // Not used for diamond-square
+    private lacunarity: number = 0;   // Not used for diamond-square
 
     // open-simplex defaults
     // private roughness: number = 0.5;
@@ -22,10 +28,10 @@ export class MyLevel extends Scene {
     // private lacunarity: number = 2.0;
 
     // perlin defaults
-    private roughness: number = 3.0;
-    private octaves: number = 6;
-    private persistence: number = 0.4;
-    private lacunarity: number = 3.0;
+    // private roughness: number = 3.0;
+    // private octaves: number = 6;
+    // private persistence: number = 0.4;
+    // private lacunarity: number = 3.0;
 
     /**
      * Generate a new random seed

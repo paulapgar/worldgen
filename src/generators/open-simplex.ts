@@ -106,9 +106,8 @@ export function generateHeightMapOpenSimplex(
       // ============================================
       // STAGE 5: VALUE SCALING
       // ============================================
-      // Convert noise value to [0, 1] range and apply roughness factor
-      // The roughness parameter controls overall terrain variation
-      heightMap[y][x] = (noise * roughness + 1) / 2;
+      // Convert noise value to [0, 1] range
+      heightMap[y][x] = (noise + 1) / 2;
     }
   }
 
@@ -130,6 +129,21 @@ export function generateHeightMapOpenSimplex(
   for (let y = 0; y < SIZE; y++) {
     for (let x = 0; x < SIZE; x++) {
       heightMap[y][x] = (heightMap[y][x] - min) / range;
+    }
+  }
+
+  // ============================================
+  // STAGE 7: ROUGHNESS APPLICATION
+  // ============================================
+  // Apply roughness after normalization to control terrain contrast.
+  // Roughness values: 0 = flat (all values pushed toward 0.5),
+  // 1.0 = normal (full variation), >1.0 = exaggerated variation
+  const midpoint = 0.5;
+  for (let y = 0; y < SIZE; y++) {
+    for (let x = 0; x < SIZE; x++) {
+      heightMap[y][x] = midpoint + (heightMap[y][x] - midpoint) * roughness;
+      // Clamp to [0, 1] range
+      heightMap[y][x] = Math.max(0, Math.min(1, heightMap[y][x]));
     }
   }
 }

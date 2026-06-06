@@ -3,6 +3,75 @@ import { Player } from "./player";
 import { createRandomTilemap } from "./tilemap";
 import { createRainbowSpriteTilemap } from "./tilemap";
 
+interface SliderRange {
+    min: number;
+    max: number;
+}
+
+interface MethodConfig {
+    name: 'diamond-square' | 'open-simplex' | 'perlin';
+    ranges: {
+        roughness: SliderRange;
+        octaves: SliderRange;
+        persistence: SliderRange;
+        lacunarity: SliderRange;
+    };
+    defaults: {
+        roughness: number;
+        octaves: number;
+        persistence: number;
+        lacunarity: number;
+    };
+}
+
+const METHOD_CONFIGS: MethodConfig[] = [
+    {
+        name: 'diamond-square',
+        ranges: {
+            roughness: { min: 0, max: 10 },
+            octaves: { min: 0, max: 0 },
+            persistence: { min: 0, max: 0 },
+            lacunarity: { min: 0, max: 0 },
+        },
+        defaults: {
+            roughness: 5.0,
+            octaves: 0,
+            persistence: 0,
+            lacunarity: 0,
+        },
+    },
+    {
+        name: 'open-simplex',
+        ranges: {
+            roughness: { min: 0, max: 5 },
+            octaves: { min: 1, max: 10 },
+            persistence: { min: 0, max: 1 },
+            lacunarity: { min: 1, max: 5 },
+        },
+        defaults: {
+            roughness: 1.5,
+            octaves: 6,
+            persistence: 0.5,
+            lacunarity: 2.0,
+        },
+    },
+    {
+        name: 'perlin',
+        ranges: {
+            roughness: { min: 0, max: 10 },
+            octaves: { min: 1, max: 10 },
+            persistence: { min: 0, max: 1 },
+            lacunarity: { min: 1, max: 5 },
+        },
+        defaults: {
+            roughness: 3.0,
+            octaves: 6,
+            persistence: 0.4,
+            lacunarity: 3.0,
+        },
+    },
+];
+
 /**
  * The main game level scene.
  *
@@ -15,29 +84,86 @@ export class MyLevel extends Scene {
     private style: 'color' | 'grayscale' = 'color';
     private seed: number = 0;
 
-    // diamond-square defaults
-    private roughness: number =5.0;
-    private octaves: number = 0;      // Not used for diamond-square
-    private persistence: number = 0;  // Not used for diamond-square
-    private lacunarity: number = 0;   // Not used for diamond-square
+    private randomizeButton = document.getElementById('randomize-seed') as HTMLButtonElement;
+    private seedValue = document.getElementById('seed-value') as HTMLSpanElement;
+    private grayscaleButton = document.getElementById('grayscale-btn') as HTMLButtonElement;
+    private landscapeButton = document.getElementById('landscape-btn') as HTMLButtonElement;
+    private diamondSquareButton = document.getElementById('diamond-square-btn') as HTMLButtonElement;
+    private openSimplexButton = document.getElementById('open-simplex-btn') as HTMLButtonElement;
+    private perlinButton = document.getElementById('perlin-btn') as HTMLButtonElement;
+    private roughnessSlider = document.getElementById('roughness-slider') as HTMLInputElement;
+    private roughnessValue = document.getElementById('roughness-value') as HTMLSpanElement;
 
-    // open-simplex defaults
-    // private roughness: number = 0.5;
-    // private octaves: number = 6;
-    // private persistence: number = 0.5;
-    // private lacunarity: number = 2.0;
+    // Current parameter values
+    private roughness: number = 5.0;
+    private octaves: number = 0;
+    private persistence: number = 0;
+    private lacunarity: number = 0;
 
-    // perlin defaults
-    // private roughness: number = 3.0;
-    // private octaves: number = 6;
-    // private persistence: number = 0.4;
-    // private lacunarity: number = 3.0;
+    /**
+     * Get the configuration for a given method
+     */
+    private getMethodConfig(methodName: 'diamond-square' | 'open-simplex' | 'perlin'): MethodConfig {
+        const config = METHOD_CONFIGS.find(c => c.name === methodName);
+        if (!config) {
+            throw new Error(`Unknown method: ${methodName}`);
+        }
+        return config;
+    }
+
+    /**
+     * Apply a method configuration and update slider ranges
+     */
+    private applyMethodConfig(methodName: 'diamond-square' | 'open-simplex' | 'perlin'): void {
+        const config = this.getMethodConfig(methodName);
+        this.method = methodName;
+        this.roughness = config.defaults.roughness;
+        this.octaves = config.defaults.octaves;
+        this.persistence = config.defaults.persistence;
+        this.lacunarity = config.defaults.lacunarity;
+
+        // Update slider range and value
+        if (this.roughnessSlider) {
+            this.roughnessSlider.min = config.ranges.roughness.min.toString();
+            this.roughnessSlider.max = config.ranges.roughness.max.toString();
+            this.roughnessSlider.step = '0.1';
+        }
+    }
 
     /**
      * Generate a new random seed
      */
     private generateSeed(): void {
         this.seed = Math.floor(Math.random() * 10000);
+        if (this.seedValue) {
+            this.seedValue.textContent = this.seed.toString();
+        }
+    }
+
+    /**
+     * Randomize the tilemap by generating a new seed and creating a new map
+     */
+    public refreshTilemap(): void {
+        if (this.currentTilemap) {
+            this.remove(this.currentTilemap);
+        }
+        this.currentTilemap = createRandomTilemap(65, 65, 8, 8, this.method, this.style, this.roughness, this.octaves, this.persistence, this.lacunarity, this.seed);
+        this.add(this.currentTilemap);
+    }
+
+    /**
+     * Check if the scene is ready
+     */
+    private refreshButtons(): void {
+        this.randomizeButton.disabled = false;
+        this.grayscaleButton.disabled = false;
+        this.landscapeButton.disabled = false;
+        this.diamondSquareButton.disabled = false;
+        this.openSimplexButton.disabled = false;
+        this.perlinButton.disabled = false;
+        this.roughnessSlider.disabled = false;
+        this.roughnessSlider.value = this.roughness.toString();
+        this.roughnessValue.textContent = this.roughness.toFixed(1);
     }
 
     /**
@@ -54,9 +180,6 @@ export class MyLevel extends Scene {
         //const player = new Player();
         //this.add(player); // Actors need to be added to a scene to be drawn
 
-        // Generate a new random seed
-        //this.generateSeed();
-
         // Create and add the tilemap
         this.currentTilemap = createRandomTilemap(65, 65, 8, 8, this.method, this.style, this.roughness, this.octaves, this.persistence, this.lacunarity, this.seed);
         this.add(this.currentTilemap);
@@ -65,15 +188,63 @@ export class MyLevel extends Scene {
         const rainbowSpriteTilemap = createRainbowSpriteTilemap();
         this.add(rainbowSpriteTilemap);
 
-        // Handle mouse clicks to create a new tilemap
-        engine.input.pointers.on('down', () => {
-            if (this.currentTilemap) {
-                this.remove(this.currentTilemap);
-            }
+        // Handle randomize button click
+        if (this.randomizeButton) {
+            this.randomizeButton.addEventListener('click', () => {
             this.generateSeed();
-            this.currentTilemap = createRandomTilemap(65, 65, 8, 8, this.method, this.style, this.roughness, this.octaves, this.persistence, this.lacunarity, this.seed);
-            this.add(this.currentTilemap);
+            this.refreshTilemap();
         });
+        }
+
+        // Handle method buttons
+        if (this.diamondSquareButton) {
+            this.diamondSquareButton.addEventListener('click', () => {
+                this.applyMethodConfig('diamond-square');
+                this.refreshButtons();
+                this.refreshTilemap();
+            });
+        }
+
+        if (this.openSimplexButton) {
+            this.openSimplexButton.addEventListener('click', () => {
+                this.applyMethodConfig('open-simplex');
+                this.refreshButtons();
+                this.refreshTilemap();
+            });
+        }
+
+        if (this.perlinButton) {
+            this.perlinButton.addEventListener('click', () => {
+                this.applyMethodConfig('perlin');
+                this.refreshButtons();
+                this.refreshTilemap();
+            });
+        }
+
+        // Handle grayscale button
+        if (this.grayscaleButton) {
+            this.grayscaleButton.addEventListener('click', () => {
+                this.style = 'grayscale';
+                this.refreshTilemap();
+            });
+        }
+
+        // Handle landscape button
+        if (this.landscapeButton) {
+            this.landscapeButton.addEventListener('click', () => {
+                this.style = 'color';
+                this.refreshTilemap();
+            });
+        }
+
+        // Handle roughness slider
+        if (this.roughnessSlider) {
+            this.roughnessSlider.addEventListener('input', () => {
+                this.roughness = parseFloat(this.roughnessSlider.value);
+                this.roughnessValue.textContent = this.roughness.toFixed(1);
+                this.refreshTilemap();
+            });
+        }
     }
 
     /**
@@ -98,6 +269,7 @@ export class MyLevel extends Scene {
     override onActivate(context: SceneActivationContext<unknown>): void {
         // Called when Excalibur transitions to this scene
         // Only 1 scene is active at a time
+        this.refreshButtons();
     }
 
     /**

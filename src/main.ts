@@ -3,11 +3,11 @@ import { loader } from "./resources";
 import { MyLevel } from "./level";
 
 // Goal is to keep main.ts small and just enough to configure the engine
-
 const game = new Engine({
-  width: 800, // Logical width and height in game pixels
+  width: 600, // Logical width and height in game pixels
   height: 600,
-  displayMode: DisplayMode.FitScreenAndFill, // Display mode tells excalibur how to fill the window
+  //displayMode: DisplayMode.FitScreenAndFill, // Display mode tells excalibur how to fill the window
+  displayMode: DisplayMode.Fixed, // Display mode tells excalibur how to fill the window
   pixelArt: true, // pixelArt will turn on the correct settings to render pixel art without jaggies or shimmering artifacts
   scenes: {
     start: MyLevel
@@ -28,5 +28,4 @@ game.start('start', { // name of the start scene 'start'
     color: Color.Black
   }),
 }).then(() => {
-  // Do something after the game starts
 });

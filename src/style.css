@@ -51,10 +51,28 @@
 }
 
 button {
-  padding: 10px 20px;
+  padding: 7px 20px;
   font-size: 16px;
   cursor: pointer;
   margin: 5px 0;
+  background-color: #8f8f8f;
+  color: #161616;
+  border: none;
+}
+
+button.inactive {
+  background-color: #555;
+  color: #aaa;
+}
+
+button.active {
+  background-color: white;
+  color: black;
+}
+
+button.style-active {
+  background-color: white;
+  color: black;
 }
 
 #roughness-slider-container {
@@ -66,19 +84,83 @@ button {
   width: 100%;
 }
 
-#roughness-slider-container label {
-  font-size: 14px;
-  color: #aaa;
+#octaves-slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  gap: 8px;
+  width: 100%;
 }
 
-#roughness-slider {
+#persistence-slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  gap: 8px;
+  width: 100%;
+}
+
+#lacunarity-slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  gap: 8px;
+  width: 100%;
+}
+
+.slider-label-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  gap: 10px;
+}
+
+#roughness-slider-container label,
+#octaves-slider-container label {
+  font-size: 14px;
+  color: #aaa;
+  flex: 1;
+  text-align: left;
+}
+
+#roughness-value,
+#octaves-value {
+  font-size: 14px;
+  color: #aaa;
+  min-width: 30px;
+  text-align: right;
+}
+
+#persistence-slider-container label,
+#lacunarity-slider-container label {
+  font-size: 14px;
+  color: #aaa;
+  flex: 1;
+  text-align: left;
+}
+
+#persistence-value,
+#lacunarity-value {
+  font-size: 14px;
+  color: #aaa;
+  min-width: 30px;
+  text-align: right;
+}
+
+#roughness-slider,
+#octaves-slider {
   width: 90%;
   cursor: pointer;
 }
 
-#roughness-value {
-  font-size: 14px;
-  color: #aaa;
+#persistence-slider,
+#lacunarity-slider {
+  width: 90%;
+  cursor: pointer;
 }
 
 #randomize-container {

@@ -93,6 +93,12 @@ export class MyLevel extends Scene {
     private perlinButton = document.getElementById('perlin-btn') as HTMLButtonElement;
     private roughnessSlider = document.getElementById('roughness-slider') as HTMLInputElement;
     private roughnessValue = document.getElementById('roughness-value') as HTMLSpanElement;
+    private octavesSlider = document.getElementById('octaves-slider') as HTMLInputElement;
+    private octavesValue = document.getElementById('octaves-value') as HTMLSpanElement;
+    private persistenceSlider = document.getElementById('persistence-slider') as HTMLInputElement;
+    private persistenceValue = document.getElementById('persistence-value') as HTMLSpanElement;
+    private lacunaritySlider = document.getElementById('lacunarity-slider') as HTMLInputElement;
+    private lacunarityValue = document.getElementById('lacunarity-value') as HTMLSpanElement;
 
     // Current parameter values
     private roughness: number = 5.0;
@@ -112,6 +118,37 @@ export class MyLevel extends Scene {
     }
 
     /**
+     * Update the visual state of method buttons
+     */
+    private updateMethodButtonStates(): void {
+        this.diamondSquareButton.classList.remove('active');
+        this.openSimplexButton.classList.remove('active');
+        this.perlinButton.classList.remove('active');
+
+        if (this.method === 'diamond-square') {
+            this.diamondSquareButton.classList.add('active');
+        } else if (this.method === 'open-simplex') {
+            this.openSimplexButton.classList.add('active');
+        } else if (this.method === 'perlin') {
+            this.perlinButton.classList.add('active');
+        }
+    }
+
+    /**
+     * Update the visual state of style buttons
+     */
+    private updateStyleButtonStates(): void {
+        this.grayscaleButton.classList.remove('style-active');
+        this.landscapeButton.classList.remove('style-active');
+
+        if (this.style === 'grayscale') {
+            this.grayscaleButton.classList.add('style-active');
+        } else if (this.style === 'color') {
+            this.landscapeButton.classList.add('style-active');
+        }
+    }
+
+    /**
      * Apply a method configuration and update slider ranges
      */
     private applyMethodConfig(methodName: 'diamond-square' | 'open-simplex' | 'perlin'): void {
@@ -128,6 +165,33 @@ export class MyLevel extends Scene {
             this.roughnessSlider.max = config.ranges.roughness.max.toString();
             this.roughnessSlider.step = '0.1';
         }
+
+        // Update octaves slider range and disable for diamond-square
+        if (this.octavesSlider) {
+            this.octavesSlider.min = config.ranges.octaves.min.toString();
+            this.octavesSlider.max = config.ranges.octaves.max.toString();
+            this.octavesSlider.step = '1';
+            this.octavesSlider.disabled = methodName === 'diamond-square';
+        }
+
+        // Update persistence slider range and disable for diamond-square
+        if (this.persistenceSlider) {
+            this.persistenceSlider.min = config.ranges.persistence.min.toString();
+            this.persistenceSlider.max = config.ranges.persistence.max.toString();
+            this.persistenceSlider.step = '0.1';
+            this.persistenceSlider.disabled = methodName === 'diamond-square';
+        }
+
+        // Update lacunarity slider range and disable for diamond-square
+        if (this.lacunaritySlider) {
+            this.lacunaritySlider.min = config.ranges.lacunarity.min.toString();
+            this.lacunaritySlider.max = config.ranges.lacunarity.max.toString();
+            this.lacunaritySlider.step = '0.1';
+            this.lacunaritySlider.disabled = methodName === 'diamond-square';
+        }
+
+        // Update button states
+        this.updateMethodButtonStates();
     }
 
     /**
@@ -164,6 +228,17 @@ export class MyLevel extends Scene {
         this.roughnessSlider.disabled = false;
         this.roughnessSlider.value = this.roughness.toString();
         this.roughnessValue.textContent = this.roughness.toFixed(1);
+        this.octavesSlider.disabled = this.method === 'diamond-square';
+        this.octavesSlider.value = this.octaves.toString();
+        this.octavesValue.textContent = this.octaves.toString();
+        this.persistenceSlider.disabled = this.method === 'diamond-square';
+        this.persistenceSlider.value = this.persistence.toString();
+        this.persistenceValue.textContent = this.persistence.toFixed(1);
+        this.lacunaritySlider.disabled = this.method === 'diamond-square';
+        this.lacunaritySlider.value = this.lacunarity.toString();
+        this.lacunarityValue.textContent = this.lacunarity.toFixed(1);
+        this.updateMethodButtonStates();
+        this.updateStyleButtonStates();
     }
 
     /**
@@ -225,6 +300,7 @@ export class MyLevel extends Scene {
         if (this.grayscaleButton) {
             this.grayscaleButton.addEventListener('click', () => {
                 this.style = 'grayscale';
+                this.refreshButtons();
                 this.refreshTilemap();
             });
         }
@@ -233,6 +309,7 @@ export class MyLevel extends Scene {
         if (this.landscapeButton) {
             this.landscapeButton.addEventListener('click', () => {
                 this.style = 'color';
+                this.refreshButtons();
                 this.refreshTilemap();
             });
         }
@@ -242,6 +319,33 @@ export class MyLevel extends Scene {
             this.roughnessSlider.addEventListener('input', () => {
                 this.roughness = parseFloat(this.roughnessSlider.value);
                 this.roughnessValue.textContent = this.roughness.toFixed(1);
+                this.refreshTilemap();
+            });
+        }
+
+        // Handle octaves slider
+        if (this.octavesSlider) {
+            this.octavesSlider.addEventListener('input', () => {
+                this.octaves = parseInt(this.octavesSlider.value);
+                this.octavesValue.textContent = this.octaves.toString();
+                this.refreshTilemap();
+            });
+        }
+
+        // Handle persistence slider
+        if (this.persistenceSlider) {
+            this.persistenceSlider.addEventListener('input', () => {
+                this.persistence = parseFloat(this.persistenceSlider.value);
+                this.persistenceValue.textContent = this.persistence.toFixed(1);
+                this.refreshTilemap();
+            });
+        }
+
+        // Handle lacunarity slider
+        if (this.lacunaritySlider) {
+            this.lacunaritySlider.addEventListener('input', () => {
+                this.lacunarity = parseFloat(this.lacunaritySlider.value);
+                this.lacunarityValue.textContent = this.lacunarity.toFixed(1);
                 this.refreshTilemap();
             });
         }

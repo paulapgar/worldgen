@@ -1,5 +1,3 @@
-
-
 // Diamond-Square Algorithm for Height Map Generation
 // ================================================
 //
@@ -36,6 +34,7 @@
 //   Must have dimensions of 2^n + 1 (e.g., 33, 65, 129, 257).
 // - `roughness`: A value between 0 and 1 (default: 0.5) that controls terrain roughness.
 //   Lower values create smoother terrain; higher values create more rugged terrain.
+// - `seed`: An optional seed for reproducible generation. If not provided, a random seed is used.
 //
 // ## Usage
 //
@@ -59,7 +58,7 @@
  * This function implements the Diamond-Square algorithm, which creates natural-looking
  * terrain by recursively subdividing a grid and adding random perturbations at each
  * level. The algorithm produces fractal noise that can be used for terrain generation,
- * landscape visualization, and procedural content creation.
+ * landscape visualization, and producing reproducible results when a seed is provided.
  *
  * @param heightMap - A square 2D array representing the height map to be generated.
  *                    Must have dimensions of 2^n + 1 (e.g., 33, 65, 129, 257).
@@ -67,21 +66,30 @@
  * @param roughness - A value between 0 and 1 (default: 0.5) that controls terrain roughness.
  *                    Lower values create smoother terrain with fewer details;
  *                    higher values create more rugged, jagged terrain.
+ * @param seed - An optional seed for reproducible generation. If not provided, a random seed is used.
  *
  * @throws {Error} If the height map is not square or if its size is not of the form 2^n + 1.
  *
  * @example
  * ```typescript
  * const heightMap: number[][] = Array(65).fill(0).map(() => Array(65).fill(0));
- * generateHeightMapDiamondSquare(heightMap, 0.5);
+ * generateHeightMapDiamondSquare(heightMap, 0.5, 12345); // Reproducible with seed 12345
  * // heightMap now contains generated terrain data in the range [0, 1]
  * ```
  */
 // ***** Qwen3.6-27B produced
 export function generateHeightMapDiamondSquare(
   heightMap: Array<Array<number>>,
-  roughness: number = 0.5
+  roughness: number = 0.5,
+  seed?: number
 ): void {
+  // A simple seeded random generator to replace Math.random() when a seed is provided.
+  let currentSeed = seed !== undefined ? seed : Math.random() * 1000000;
+  const seededRandom = () => {
+    const x = Math.sin(currentSeed++) * 10000;
+    return x - Math.floor(x);
+  };
+
   // ============================================
   // STAGE 1: INPUT VALIDATION
   // ============================================
@@ -109,10 +117,10 @@ export function generateHeightMapDiamondSquare(
   // ============================================
   // Initialize the four corners with random values
   // These serve as the seed values for the fractal generation
-  heightMap[0][0] = Math.random();
-  heightMap[0][SIZE - 1] = Math.random();
-  heightMap[SIZE - 1][0] = Math.random();
-  heightMap[SIZE - 1][SIZE - 1] = Math.random();
+  heightMap[0][0] = seededRandom();
+  heightMap[0][SIZE - 1] = seededRandom();
+  heightMap[SIZE - 1][0] = seededRandom();
+  heightMap[SIZE - 1][SIZE - 1] = seededRandom();
 
   // ============================================
   // STAGE 3: RECURSIVE SUBDIVISION
@@ -135,7 +143,7 @@ export function generateHeightMapDiamondSquare(
       for (let x = 0; x < SIZE - 1; x += size) {
         const avg =
           (heightMap[y][x] + heightMap[y][x + size] + heightMap[y + size][x] + heightMap[y + size][x + size]) / 4;
-        heightMap[y + half][x + half] = avg + (Math.random() * 2 - 1) * scale;
+        heightMap[y + half][x + half] = avg + (seededRandom() * 2 - 1) * scale;
       }
     }
 
@@ -156,7 +164,7 @@ export function generateHeightMapDiamondSquare(
         if (x - half >= 0) { sum += heightMap[y][x - half]; count++; }
         if (x + half < SIZE) { sum += heightMap[y][x + half]; count++; }
 
-        heightMap[y][x] = sum / count + (Math.random() * 2 - 1) * scale;
+        heightMap[y][x] = sum / count + (seededRandom() * 2 - 1) * scale;
       }
     }
 

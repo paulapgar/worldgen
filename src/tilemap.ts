@@ -46,7 +46,7 @@ export function createRandomTilemap(
 
   switch (method) {
     case 'diamond-square':
-      generateHeightMapDiamondSquare(heightmap, roughness);
+      generateHeightMapDiamondSquare(heightmap, roughness, seed);
       break;
     case 'open-simplex':
       generateHeightMapOpenSimplex(heightmap, roughness, octaves, persistence, lacunarity, seed);

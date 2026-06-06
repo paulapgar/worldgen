@@ -12,11 +12,11 @@ import { createRainbowSpriteTilemap } from "./tilemap";
 export class MyLevel extends Scene {
     private currentTilemap: any = null;
     private method: 'diamond-square' | 'open-simplex' | 'perlin' = 'diamond-square';
-    private style: 'color' | 'grayscale' = 'grayscale';
+    private style: 'color' | 'grayscale' = 'color';
     private seed: number = 0;
 
     // diamond-square defaults
-    private roughness: number = 5.0;
+    private roughness: number =5.0;
     private octaves: number = 0;      // Not used for diamond-square
     private persistence: number = 0;  // Not used for diamond-square
     private lacunarity: number = 0;   // Not used for diamond-square
@@ -55,7 +55,7 @@ export class MyLevel extends Scene {
         //this.add(player); // Actors need to be added to a scene to be drawn
 
         // Generate a new random seed
-        this.generateSeed();
+        //this.generateSeed();
 
         // Create and add the tilemap
         this.currentTilemap = createRandomTilemap(65, 65, 8, 8, this.method, this.style, this.roughness, this.octaves, this.persistence, this.lacunarity, this.seed);

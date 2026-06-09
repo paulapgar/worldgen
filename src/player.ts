@@ -75,12 +75,12 @@ export class Player extends Actor {
     });
 
     // Sometimes you want to click on an actor!
-    this.on('pointerdown', (evt) => {
+    this.on('pointerdown', (_evt) => {
       // Pointer events tunnel in z order from the screen down, you can cancel them!
       // if (true) {
       //   evt.cancel();
       // }
-      console.log('You clicked the actor @', evt.worldPos.toString());
+      //console.log('You clicked the actor @', evt.worldPos.toString());
     });
   }
 
@@ -90,7 +90,7 @@ export class Player extends Actor {
    * @param engine - The current game engine instance.
    * @param elapsedMs - Milliseconds since the last frame.
    */
-  override onPreUpdate(engine: Engine, elapsedMs: number): void {
+  override onPreUpdate(_engine: Engine, _elapsedMs: number): void {
     // Put any update logic here runs every frame before Actor builtins
   }
 
@@ -100,7 +100,7 @@ export class Player extends Actor {
    * @param engine - The current game engine instance.
    * @param elapsedMs - Milliseconds since the last frame.
    */
-  override onPostUpdate(engine: Engine, elapsedMs: number): void {
+  override onPostUpdate(_engine: Engine, _elapsedMs: number): void {
     // Put any update logic here runs every frame after Actor builtins
   }
 
@@ -116,10 +116,10 @@ export class Player extends Actor {
    * @param contact - Collision contact information (can be cancelled).
    */
   override onPreCollisionResolve(
-    self: Collider,
-    other: Collider,
-    side: Side,
-    contact: CollisionContact
+    _self: Collider,
+    _other: Collider,
+    _side: Side,
+    _contact: CollisionContact
   ): void {
     // Called before a collision is resolved, if you want to opt out of this specific collision call contact.cancel()
   }
@@ -133,10 +133,10 @@ export class Player extends Actor {
    * @param contact - Collision contact information.
    */
   override onPostCollisionResolve(
-    self: Collider,
-    other: Collider,
-    side: Side,
-    contact: CollisionContact
+    _self: Collider,
+    _other: Collider,
+    _side: Side,
+    _contact: CollisionContact
   ): void {
     // Called every time a collision is resolved and overlap is solved
   }
@@ -150,10 +150,10 @@ export class Player extends Actor {
    * @param contact - Collision contact information.
    */
   override onCollisionStart(
-    self: Collider,
-    other: Collider,
-    side: Side,
-    contact: CollisionContact
+    _self: Collider,
+    _other: Collider,
+    _side: Side,
+    _contact: CollisionContact
   ): void {
     // Called when a pair of objects are in contact
   }
@@ -168,10 +168,10 @@ export class Player extends Actor {
    * @param lastContact - Collision contact information from the last contact.
    */
   override onCollisionEnd(
-    self: Collider,
-    other: Collider,
-    side: Side,
-    lastContact: CollisionContact
+    _self: Collider,
+    _other: Collider,
+    _side: Side,
+    _lastContact: CollisionContact
   ): void {
     // Called when a pair of objects separates
   }

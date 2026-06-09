@@ -7,7 +7,6 @@ import {
   SceneActivationContext,
 } from 'excalibur';
 
-import { Player } from './player';
 import { createRandomTilemap , createRainbowSpriteTilemap } from './tilemap';
 
 interface SliderRange {
@@ -268,7 +267,7 @@ export class MyLevel extends Scene {
    *
    * @param engine - The Excalibur engine instance.
    */
-  override onInitialize(engine: Engine): void {
+  override onInitialize(_engine: Engine): void {
     // Scene.onInitialize is where we recommend you perform the composition for your game
     this.backgroundColor = Color.Black; // or any other color
     //const player = new Player();
@@ -390,7 +389,7 @@ export class MyLevel extends Scene {
    *
    * @param loader - The Excalibur resource loader.
    */
-  override onPreLoad(loader: DefaultLoader): void {
+  override onPreLoad(_loader: DefaultLoader): void {
     // Add any scene specific resources to load
   }
 
@@ -401,7 +400,7 @@ export class MyLevel extends Scene {
    *
    * @param context - The activation context containing any data passed during transition.
    */
-  override onActivate(context: SceneActivationContext<unknown>): void {
+  override onActivate(_context: SceneActivationContext<unknown>): void {
     // Called when Excalibur transitions to this scene
     // Only 1 scene is active at a time
     this.applyMethodConfig('diamond-square');
@@ -416,7 +415,7 @@ export class MyLevel extends Scene {
    *
    * @param context - The deactivation context containing any data passed during transition.
    */
-  override onDeactivate(context: SceneActivationContext): void {
+  override onDeactivate(_context: SceneActivationContext): void {
     // Called when Excalibur transitions away from this scene
     // Only 1 scene is active at a time
   }
@@ -427,7 +426,7 @@ export class MyLevel extends Scene {
    * @param engine - The Excalibur engine instance.
    * @param elapsedMs - Time in milliseconds since the last frame.
    */
-  override onPreUpdate(engine: Engine, elapsedMs: number): void {
+  override onPreUpdate(_engine: Engine, _elapsedMs: number): void {
     // Called before anything updates in the scene
   }
 
@@ -437,7 +436,7 @@ export class MyLevel extends Scene {
    * @param engine - The Excalibur engine instance.
    * @param elapsedMs - Time in milliseconds since the last frame.
    */
-  override onPostUpdate(engine: Engine, elapsedMs: number): void {
+  override onPostUpdate(_engine: Engine, _elapsedMs: number): void {
     // Called after everything updates in the scene
   }
 
@@ -447,7 +446,7 @@ export class MyLevel extends Scene {
    * @param ctx - The graphics context used for rendering.
    * @param elapsedMs - Time in milliseconds since the last frame.
    */
-  override onPreDraw(ctx: ExcaliburGraphicsContext, elapsedMs: number): void {
+  override onPreDraw(_ctx: ExcaliburGraphicsContext, _elapsedMs: number): void {
     // Called before Excalibur draws to the screen
   }
 
@@ -457,7 +456,7 @@ export class MyLevel extends Scene {
    * @param ctx - The graphics context used for rendering.
    * @param elapsedMs - Time in milliseconds since the last frame.
    */
-  override onPostDraw(ctx: ExcaliburGraphicsContext, elapsedMs: number): void {
+  override onPostDraw(_ctx: ExcaliburGraphicsContext, _elapsedMs: number): void {
     // Called after Excalibur draws to the screen
   }
 }

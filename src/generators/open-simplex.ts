@@ -1,4 +1,3 @@
-
 // OpenSimplex Noise Algorithm Explanation:
 // ==========================================
 // OpenSimplex is an improved version of Perlin noise that addresses several
@@ -60,8 +59,8 @@ export function generateHeightMapOpenSimplex(
   octaves: number = 4,
   persistence: number = 0.5,
   lacunarity: number = 2.0,
-  seed: number = Math.random() * 10000): void {
-
+  seed: number = Math.random() * 10000
+): void {
   // ============================================
   // STAGE 1: INPUT VALIDATION
   // ============================================
@@ -70,7 +69,9 @@ export function generateHeightMapOpenSimplex(
   const cols = heightMap[0]?.length;
 
   if (!cols || rows !== cols) {
-    throw new Error(`generateHeightMapOpenSimplex requires a square heightmap, got ${rows}x${cols}`);
+    throw new Error(
+      `generateHeightMapOpenSimplex requires a square heightmap, got ${rows}x${cols}`
+    );
   }
 
   if (rows === 0) {
@@ -117,7 +118,8 @@ export function generateHeightMapOpenSimplex(
   // Normalize all height values to [0, 1] range for consistent output
   // This ensures the terrain values are uniformly distributed regardless
   // of the noise generation parameters
-  let min = Infinity, max = -Infinity;
+  let min = Infinity,
+    max = -Infinity;
   for (const row of heightMap) {
     for (const v of row) {
       if (v < min) min = v;
@@ -162,10 +164,10 @@ class SeededRandom {
   // This algorithm produces high-quality pseudo-random numbers with good
   // statistical properties and is fast to compute
   next(): number {
-    let t = this.seed += 0x6D2B79F5;
-    t = Math.imul(t ^ t >>> 15, t | 1);
-    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    let t = (this.seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   }
 }
 
@@ -173,9 +175,18 @@ class SeededRandom {
 // This table maps grid coordinates to gradient indices for noise generation
 let perm: Uint8Array;
 const grad3 = [
-  [1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],
-  [1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],
-  [0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]
+  [1, 1, 0],
+  [-1, 1, 0],
+  [1, -1, 0],
+  [-1, -1, 0],
+  [1, 0, 1],
+  [-1, 0, 1],
+  [1, 0, -1],
+  [-1, 0, -1],
+  [0, 1, 1],
+  [0, -1, 1],
+  [0, 1, -1],
+  [0, -1, -1],
 ];
 
 // Initialize permutation table with seed
@@ -228,8 +239,13 @@ function openSimplex2D(x: number, y: number): number {
   // Based on the position within the simplex cell, we identify which of the
   // three corners will have the highest contribution to the noise value
   let i1, j1;
-  if (x0 > y0) { i1 = 1; j1 = 0; }
-  else { i1 = 0; j1 = 1; }
+  if (x0 > y0) {
+    i1 = 1;
+    j1 = 0;
+  } else {
+    i1 = 0;
+    j1 = 1;
+  }
 
   const x1 = x0 - i1 + G2;
   const y1 = y0 - j1 + G2;
@@ -246,7 +262,9 @@ function openSimplex2D(x: number, y: number): number {
 
   // Calculate squared distances
   // These determine how close the point is to each corner of the simplex cell
-  let n0 = 0, n1 = 0, n2 = 0;
+  let n0 = 0,
+    n1 = 0,
+    n2 = 0;
 
   // Calculate contribution from corner 0
   // Uses smooth decay function (t^4) for smooth transitions
@@ -281,7 +299,13 @@ function openSimplex2D(x: number, y: number): number {
 // Stacks multiple octaves of noise with diminishing amplitude and increasing frequency
 // This creates detail at different scales, simulating natural phenomena like mountains,
 // valleys, and coastlines
-function fractalNoise(x: number, y: number, octaves: number, persistence: number, lacunarity: number): number {
+function fractalNoise(
+  x: number,
+  y: number,
+  octaves: number,
+  persistence: number,
+  lacunarity: number
+): number {
   let total = 0;
   let frequency = 1;
   let amplitude = 1;

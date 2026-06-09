@@ -1,4 +1,4 @@
-import { ImageSource, Loader, Color, Rectangle } from "excalibur";
+import { ImageSource, Loader, Color, Rectangle } from 'excalibur';
 
 // Rainbow color palette (5 shades per color)
 const rainbowColors = [
@@ -70,23 +70,26 @@ const rainbowColors = [
   { name: 'gray225', color: '#E1E1E1' },
   { name: 'gray235', color: '#EBEBEB' },
   { name: 'gray245', color: '#F5F5F5' },
-  { name: 'gray255', color: '#FFFFFF' }
+  { name: 'gray255', color: '#FFFFFF' },
 ];
 
 // Generate all color squares
 const colorSquares = rainbowColors.map(({ name, color }) => ({
   name,
-  image: new Rectangle({ width: 10, height: 10, color: Color.fromHex(color) })
+  image: new Rectangle({ width: 10, height: 10, color: Color.fromHex(color) }),
 }));
 
 // It is convenient to put your resources in one place
 export const Resources = {
-  Sword: new ImageSource("./images/sword.png"), // Vite public/ directory serves the root images
+  Sword: new ImageSource('./images/sword.png'), // Vite public/ directory serves the root images
   // Rainbow color squares
-  ...colorSquares.reduce((acc, { name, image }) => ({
-    ...acc,
-    [name]: image
-  }), {})
+  ...colorSquares.reduce(
+    (acc, { name, image }) => ({
+      ...acc,
+      [name]: image,
+    }),
+    {}
+  ),
 } as any;
 
 // We build a loader and add all of our resources to the boot loader
@@ -119,8 +122,17 @@ export function getHeightGrayScale(height: number): Rectangle {
   // Map height (0.0 to 1.0) to grayscale colors in 0.1 increments
   // 0.0 → gray65, 0.1 → gray85, 0.2 → gray105, ..., 1.0 → gray255
   const grayColors = [
-    'gray65', 'gray85', 'gray105', 'gray125', 'gray145',
-    'gray165', 'gray185', 'gray205', 'gray225', 'gray245', 'gray255'
+    'gray65',
+    'gray85',
+    'gray105',
+    'gray125',
+    'gray145',
+    'gray165',
+    'gray185',
+    'gray205',
+    'gray225',
+    'gray245',
+    'gray255',
   ];
 
   // Normalize height to 0-10 range (10 steps of 0.1)

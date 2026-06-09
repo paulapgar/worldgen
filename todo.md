@@ -11,6 +11,3 @@
 [ ] Provide a UI to select each method
 
 [ ] Provide a UI to select color/grayscale
-
-
-

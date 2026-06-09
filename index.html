@@ -1,14 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="favicon.ico" />
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
-    <link rel="stylesheet" href="./src/style.css">
+    <link rel="stylesheet" href="./src/style.css" />
     <title>Procedural Generation for Landscapes</title>
   </head>
-  <body style="margin: 0; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: flex-start; width: 100vw; height: 100vh;">
-    <table id="center-wrapper" style="border-collapse: collapse;">
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100vw;
+      height: 100vh;
+    "
+  >
+    <table id="center-wrapper" style="border-collapse: collapse">
       <tr>
         <td id="game-container">
           <script type="module" src="./src/main.ts"></script>
@@ -28,28 +39,60 @@
               <label for="roughness-slider">Roughness</label>
               <span id="roughness-value">5.0</span>
             </div>
-            <input type="range" id="roughness-slider" min="0" max="10" step="0.1" value="0" disabled="true">
+            <input
+              type="range"
+              id="roughness-slider"
+              min="0"
+              max="10"
+              step="0.1"
+              value="0"
+              disabled="true"
+            />
           </div>
           <div id="octaves-slider-container">
             <div class="slider-label-container">
               <label for="octaves-slider">Octaves</label>
               <span id="octaves-value">6</span>
             </div>
-            <input type="range" id="octaves-slider" min="1" max="10" step="1" value="0" disabled="true">
+            <input
+              type="range"
+              id="octaves-slider"
+              min="1"
+              max="10"
+              step="1"
+              value="0"
+              disabled="true"
+            />
           </div>
           <div id="persistence-slider-container">
             <div class="slider-label-container">
               <label for="persistence-slider">Persistence</label>
               <span id="persistence-value">0.5</span>
             </div>
-            <input type="range" id="persistence-slider" min="0" max="1" step="0.1" value="0" disabled="true">
+            <input
+              type="range"
+              id="persistence-slider"
+              min="0"
+              max="1"
+              step="0.1"
+              value="0"
+              disabled="true"
+            />
           </div>
           <div id="lacunarity-slider-container">
             <div class="slider-label-container">
               <label for="lacunarity-slider">Lacunarity</label>
               <span id="lacunarity-value">2.0</span>
             </div>
-            <input type="range" id="lacunarity-slider" min="1" max="5" step="0.1" value="0" disabled="true">
+            <input
+              type="range"
+              id="lacunarity-slider"
+              min="1"
+              max="5"
+              step="0.1"
+              value="0"
+              disabled="true"
+            />
           </div>
         </td>
       </tr>

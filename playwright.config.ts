@@ -47,8 +47,8 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         launchOptions: {
-          args: ["--no-sandbox", '--disable-web-security', "--use-angle=gl"]
-        }
+          args: ['--no-sandbox', '--disable-web-security', '--use-angle=gl'],
+        },
       },
     },
 

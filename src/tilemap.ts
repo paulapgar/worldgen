@@ -1,8 +1,9 @@
-import { TileMap, vec, Rectangle } from "excalibur";
-import { Resources, getHeightColor, getHeightGrayScale } from "./resources";
-import { generateHeightMapDiamondSquare } from "./generators/diamond-square";
-import { generateHeightMapOpenSimplex } from "./generators/open-simplex";
-import { generateHeightMapPerlin } from "./generators/perlin";
+import { TileMap, vec, Rectangle } from 'excalibur';
+
+import { generateHeightMapDiamondSquare } from './generators/diamond-square';
+import { generateHeightMapOpenSimplex } from './generators/open-simplex';
+import { generateHeightMapPerlin } from './generators/perlin';
+import { Resources, getHeightColor, getHeightGrayScale } from './resources';
 
 /**
  * Generates a tilemap with random colored tiles
@@ -32,7 +33,6 @@ export function createRandomTilemap(
   lacunarity: number = 2.0,
   seed: number = Math.random() * 10000
 ): TileMap {
-
   const tilemap = new TileMap({
     pos: vec(0, 35),
     tileWidth,
@@ -90,30 +90,77 @@ export function createRandomTilemap(
  * @returns A configured TileMap with rainbow sprite tiles
  */
 export function createRainbowSpriteTilemap(): TileMap {
-
   // Define all rainbow sprite names in order
   const spriteNames = [
     // Red shades
-    'redLight', 'redMedium', 'red', 'redDark', 'redDark2',
+    'redLight',
+    'redMedium',
+    'red',
+    'redDark',
+    'redDark2',
     // Orange shades
-    'orangeLight', 'orangeMedium', 'orange', 'orangeDark', 'orangeDark2',
+    'orangeLight',
+    'orangeMedium',
+    'orange',
+    'orangeDark',
+    'orangeDark2',
     // Yellow shades
-    'yellowLight', 'yellowMedium', 'yellow', 'yellowDark', 'yellowDark2',
+    'yellowLight',
+    'yellowMedium',
+    'yellow',
+    'yellowDark',
+    'yellowDark2',
     // Green shades
-    'greenLight', 'greenMedium', 'green', 'greenDark', 'greenDark2',
+    'greenLight',
+    'greenMedium',
+    'green',
+    'greenDark',
+    'greenDark2',
     // Blue shades
-    'blueLight', 'blueMedium', 'blue', 'blueDark', 'blueDark2',
+    'blueLight',
+    'blueMedium',
+    'blue',
+    'blueDark',
+    'blueDark2',
     // Indigo shades
-    'indigoLight', 'indigoMedium', 'indigo', 'indigoDark', 'indigoDark2',
+    'indigoLight',
+    'indigoMedium',
+    'indigo',
+    'indigoDark',
+    'indigoDark2',
     // Violet shades
-    'violetLight', 'violetMedium', 'violet', 'violetDark', 'violetDark2',
+    'violetLight',
+    'violetMedium',
+    'violet',
+    'violetDark',
+    'violetDark2',
     // Brown shades
-    'brownLight', 'brownMedium', 'brown', 'brownDark', 'brownDark2',
+    'brownLight',
+    'brownMedium',
+    'brown',
+    'brownDark',
+    'brownDark2',
     // Gray shades
-    'gray65', 'gray75', 'gray85', 'gray95', 'gray105',
-    'gray115', 'gray125', 'gray135', 'gray145', 'gray155',
-    'gray165', 'gray175', 'gray185', 'gray195', 'gray205',
-    'gray215', 'gray225', 'gray235', 'gray245', 'gray255'
+    'gray65',
+    'gray75',
+    'gray85',
+    'gray95',
+    'gray105',
+    'gray115',
+    'gray125',
+    'gray135',
+    'gray145',
+    'gray155',
+    'gray165',
+    'gray175',
+    'gray185',
+    'gray195',
+    'gray205',
+    'gray215',
+    'gray225',
+    'gray235',
+    'gray245',
+    'gray255',
   ];
 
   // Assign sprites to tile positions in an 8×5 grid

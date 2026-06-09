@@ -1,4 +1,3 @@
-
 // Perlin Noise Algorithm Explanation:
 // ======================================
 // Perlin noise is a gradient noise algorithm that generates smooth, continuous
@@ -62,8 +61,8 @@ export function generateHeightMapPerlin(
   octaves: number = 4,
   persistence: number = 0.5,
   lacunarity: number = 2.0,
-  seed: number = Math.random() * 10000): void {
-
+  seed: number = Math.random() * 10000
+): void {
   // ============================================
   // STAGE 1: INPUT VALIDATION
   // ============================================
@@ -118,9 +117,18 @@ export function generateHeightMapPerlin(
 // Permutation table for noise generation
 const perm = new Uint8Array(512);
 const grad3 = [
-  [1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],
-  [1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],
-  [0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]
+  [1, 1, 0],
+  [-1, 1, 0],
+  [1, -1, 0],
+  [-1, -1, 0],
+  [1, 0, 1],
+  [-1, 0, 1],
+  [1, 0, -1],
+  [-1, 0, -1],
+  [0, 1, 1],
+  [0, -1, 1],
+  [0, 1, -1],
+  [0, -1, -1],
 ];
 
 // Initialize permutation table with seed
@@ -159,7 +167,8 @@ function perlin2(x: number, y: number): number {
   const B = perm[X + 1] + Y;
 
   // Linear interpolation of gradient values
-  return lerp(v,
+  return lerp(
+    v,
     lerp(u, grad(perm, A, x, y), grad(perm, B, x - 1, y)),
     lerp(u, grad(perm, A + 1, x, y - 1), grad(perm, B + 1, x - 1, y - 1))
   );
@@ -182,7 +191,13 @@ function lerp(t: number, a: number, b: number): number {
 }
 
 // Fractal Brownian motion (fBm) for multi-octave noise
-function fractalNoise(x: number, y: number, octaves: number, persistence: number, lacunarity: number): number {
+function fractalNoise(
+  x: number,
+  y: number,
+  octaves: number,
+  persistence: number,
+  lacunarity: number
+): number {
   let total = 0;
   let frequency = 1;
   let amplitude = 1;

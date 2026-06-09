@@ -98,7 +98,9 @@ export function generateHeightMapDiamondSquare(
   const cols = heightMap[0]?.length;
 
   if (!cols || rows !== cols) {
-    throw new Error(`generateHeightMapDiamondSquare requires a square heightmap, got ${rows}x${cols}`);
+    throw new Error(
+      `generateHeightMapDiamondSquare requires a square heightmap, got ${rows}x${cols}`
+    );
   }
 
   // Validate that size fits diamond-square algorithm (must be 2^n + 1)
@@ -126,7 +128,7 @@ export function generateHeightMapDiamondSquare(
   // STAGE 3: RECURSIVE SUBDIVISION
   // ============================================
   // Start with the full grid size and progressively reduce it
-  let size = SIZE - 1;  // Current grid size (starts as SIZE-1)
+  let size = SIZE - 1; // Current grid size (starts as SIZE-1)
   let scale = roughness; // Current roughness factor (starts at user-provided value)
 
   // Continue until we reach a 2x2 grid (size = 1)
@@ -142,7 +144,11 @@ export function generateHeightMapDiamondSquare(
     for (let y = 0; y < SIZE - 1; y += size) {
       for (let x = 0; x < SIZE - 1; x += size) {
         const avg =
-          (heightMap[y][x] + heightMap[y][x + size] + heightMap[y + size][x] + heightMap[y + size][x + size]) / 4;
+          (heightMap[y][x] +
+            heightMap[y][x + size] +
+            heightMap[y + size][x] +
+            heightMap[y + size][x + size]) /
+          4;
         heightMap[y + half][x + half] = avg + (seededRandom() * 2 - 1) * scale;
       }
     }
@@ -154,15 +160,27 @@ export function generateHeightMapDiamondSquare(
     // and add a random perturbation scaled by the current roughness
     // This fills in the gaps created by the diamond step
     for (let y = 0; y < SIZE; y += half) {
-      for (let x = (y % size === 0 ? half : 0); x < SIZE; x += size) {
+      for (let x = y % size === 0 ? half : 0; x < SIZE; x += size) {
         let sum = 0;
         let count = 0;
 
         // Check each of the four neighbors and add their values
-        if (y - half >= 0) { sum += heightMap[y - half][x]; count++; }
-        if (y + half < SIZE) { sum += heightMap[y + half][x]; count++; }
-        if (x - half >= 0) { sum += heightMap[y][x - half]; count++; }
-        if (x + half < SIZE) { sum += heightMap[y][x + half]; count++; }
+        if (y - half >= 0) {
+          sum += heightMap[y - half][x];
+          count++;
+        }
+        if (y + half < SIZE) {
+          sum += heightMap[y + half][x];
+          count++;
+        }
+        if (x - half >= 0) {
+          sum += heightMap[y][x - half];
+          count++;
+        }
+        if (x + half < SIZE) {
+          sum += heightMap[y][x + half];
+          count++;
+        }
 
         heightMap[y][x] = sum / count + (seededRandom() * 2 - 1) * scale;
       }
@@ -179,7 +197,8 @@ export function generateHeightMapDiamondSquare(
   // ============================================
   // Normalize all height values to the range [0, 1] for consistent output
   // This ensures the terrain data is usable regardless of the random seed
-  let min = Infinity, max = -Infinity;
+  let min = Infinity,
+    max = -Infinity;
   for (const row of heightMap) {
     for (const v of row) {
       if (v < min) min = v;

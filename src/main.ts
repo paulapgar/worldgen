@@ -1,6 +1,7 @@
-import { Color, DisplayMode, Engine, FadeInOut } from "excalibur";
-import { loader } from "./resources";
-import { MyLevel } from "./level";
+import { Color, DisplayMode, Engine, FadeInOut } from 'excalibur';
+
+import { MyLevel } from './level';
+import { loader } from './resources';
 
 // Goal is to keep main.ts small and just enough to configure the engine
 const game = new Engine({
@@ -15,13 +16,13 @@ const game = new Engine({
 
 // Generate height map when game starts
 game
-  .start("start", {
+  .start('start', {
     // name of the start scene 'start'
     loader, // Optional loader (but needed for loading images/sounds)
     inTransition: new FadeInOut({
       // Optional in transition
       duration: 1000,
-      direction: "in",
+      direction: 'in',
       color: Color.Black,
     }),
   })

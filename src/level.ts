@@ -144,13 +144,13 @@ export class MyLevel extends Scene {
    * Update the visual state of style buttons
    */
   private updateStyleButtonStates(): void {
-    this.grayscaleButton.classList.remove('style-active');
-    this.landscapeButton.classList.remove('style-active');
+    this.grayscaleButton.classList.remove('active');
+    this.landscapeButton.classList.remove('active');
 
     if (this.style === 'grayscale') {
-      this.grayscaleButton.classList.add('style-active');
+      this.grayscaleButton.classList.add('active');
     } else if (this.style === 'color') {
-      this.landscapeButton.classList.add('style-active');
+      this.landscapeButton.classList.add('active');
     }
   }
 

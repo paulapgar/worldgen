@@ -8,7 +8,7 @@ const game = new Engine({
   canvasElementId: 'game',
   width: 600, // Logical width and height in game pixels
   height: 600,
-  //displayMode: DisplayMode.Fixed, // Display mode tells excalibur how to fill the window
+  displayMode: DisplayMode.Fixed, // Display mode tells excalibur how to fill the window
   pixelArt: true, // pixelArt will turn on the correct settings to render pixel art without jaggies or shimmering artifacts
   scenes: {
     start: MyLevel,
